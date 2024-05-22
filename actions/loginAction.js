@@ -17,14 +17,14 @@ export const caretakerlogin = caretakerLogin => {
 };
 
 export const OtpByEmail = otpData => {
-    var email={"caretaker_email":otpData};
+    var phone={"caretaker_phone_number":otpData};
     return fetch(`${API}/OtpByEmail`, {
         method: 'POST',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(email)
+        body: JSON.stringify(phone)
     })
         .then(response => {
             return response.json();

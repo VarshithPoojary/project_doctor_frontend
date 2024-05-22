@@ -126,17 +126,17 @@ const OTPPage = () => {
       const response = await OtpByEmail(userPhone);
       const user = response;
   
-      if (user.caretaker_otp=== otpDigits) { 
+      if (user.caretaker_otp===otpDigits) { 
         setMessage('OTP verified successfully');
         setError('');
   
         const registration_data = {
-          caretaker_phone_number: userPhone,
+          caretaker_phone_number:userPhone,
           caretaker_register_status: true,
         };
   
-        try {
-          const updateResponse = await caretaker_registration_update (registration_data); 
+      try {
+          const updateResponse = await caretaker_registration_update(registration_data); 
           if (updateResponse.error) {
             setError(updateResponse);
             // setValues({ ...values, error: updateResponse.error });
@@ -149,14 +149,16 @@ const OTPPage = () => {
           setError('Error updating registration status');
           // setValues({ ...values, error: 'Error updating registration status', loading: false });
         }
-      } else {
+      } 
+      else {
         setMessage('');
         setError('Wrong OTP');
         setTimeout(() => {
           setError('');
         }, 1000);
       }
-    } catch (err) {
+    }
+     catch (err) {
       console.error('Failed to verify OTP:', err);
       setMessage('');
       setError('Failed to verify OTP');
@@ -164,7 +166,7 @@ const OTPPage = () => {
   };
 
 
- /* const handleResendOTP = async (e) => {
+/* const handleResendOTP = async (e) => {
     e.preventDefault();
     const userPhone = localStorage.getItem('userPhone');
     try {
@@ -189,9 +191,9 @@ const OTPPage = () => {
       setError('Failed to generate OTP');
     }
   };
+*/
 
 
-  */
   
 
   return (
