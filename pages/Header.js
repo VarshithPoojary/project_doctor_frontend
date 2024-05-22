@@ -99,7 +99,7 @@ const Header = () => {
                   <Link href='/dashboard'><span>Dashboard</span></Link>
                 </MenuItem>
                 <MenuItem icon={<BiUser />} title="Admin" onClick={handleAdmin}>
-                <Link href='/Admin/viewAdminList'><span>Admin</span></Link>
+                <Link href='/slot'><span>Slots</span></Link>
                 </MenuItem>
                 <MenuItem icon={<BiClinic />} title="Doctor">Doctor</MenuItem>
                 <MenuItem icon={<BiUserPlus />} title="Patient">Patient</MenuItem>

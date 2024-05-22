@@ -3,7 +3,7 @@ import Link from 'next/link';
 import $ from 'jquery';
 import Router from 'next/router';
 import { FiHome, FiBell, FiSettings, FiUser } from 'react-icons/fi'; 
-import { admin_details_by_id } from '../actions/adminprofileAction';
+import { caretaker_list_by_id } from '../actions/registrationAction';
 
 const Topbar = () => {
   const defaultProfileImage = '/images/userLogo.jpeg';
@@ -23,7 +23,7 @@ const Topbar = () => {
     showForm: true
   });
 
-  const {admin_list,admin_profile_image, error, loading, message, showForm } = values;
+  const {caretaker_list,caretaker_profile_image, error, loading, message, showForm } = values;
 
     useEffect(() => {
       if (typeof window !== 'undefined') {
@@ -34,6 +34,7 @@ const Topbar = () => {
           loadUserDetails(user_id);
         }
       
+
    
 
     // $('.button-menu-mobile').on('click', function (event) {
@@ -58,14 +59,14 @@ const Topbar = () => {
   }, []);
   
 const loadUserDetails = (user_id) => {
-  admin_details_by_id(user_id).then(data => {
+  caretaker_list_by_id(user_id).then(data => {
     if (data.error) {
       console.log(data.error);
       setValues({ ...values, error: data.error, loading: false });
     } else {
-      const adminData = data.admin_list[0];
+      const caretakerData = data.admin_list[0];
       setValues({ ...values,
-        admin_profile_image: adminData.admin_profile_image || defaultProfileImage,     
+        caretaker_profile_image: caretakerData.caretaker_profile_image || defaultProfileImage,     
          loading: false });
     }
   }).catch(error => {
@@ -117,7 +118,7 @@ const loadUserDetails = (user_id) => {
               <Link href='/Adminprofileui'>
               <a  className="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" role="button" aria-haspopup="false" >
                 <span className="ml-1" style={{ color: "black" }}>
-                  <img src={admin_profile_image} alt="Profile" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
+                  <img src={caretaker_profile_image} alt="Profile" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />
                 </span>
               </a>
               </Link>

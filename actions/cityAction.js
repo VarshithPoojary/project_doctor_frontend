@@ -80,3 +80,18 @@ export const DeleteCityDetails = (query) => {
         .catch(err => console.log(err));
 };
 
+export const city_list_by_state_id = city => {
+    var id={"admin_state_id":city};
+    return fetch(`${API}/city_list_by_state_id`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(id)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};

@@ -4,7 +4,7 @@ import fetch from 'isomorphic-fetch';
 
 
 export const Registration = formData => {
-    return fetch(`${API}/admin_add`, {
+    return fetch(`${API}/add_caretaker`, {
         method: 'POST',
         body: formData
     })
@@ -20,3 +20,32 @@ export const Registration = formData => {
         });
 };
 
+export const caretaker_list_by_id = adminData => {
+    var id={"_id":adminData};
+    return fetch(`${API}/caretaker_list_by_id`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(id)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
+
+export const caretaker_list = () => {
+    return fetch(`${API}/caretaker_list`,{
+        method: 'GET',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
