@@ -359,7 +359,7 @@ const Registrations = () => {
                 setIsSuccess(true);
                 setSuccessMessage('Mail Sent To Your Email');
                 setTimeout(() => {
-                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('userPhone', phoneNumber);
                     Router.push(`/CaretakerLoginOTP`);
                 }, 1000);
             }
