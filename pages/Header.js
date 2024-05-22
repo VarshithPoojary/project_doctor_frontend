@@ -50,7 +50,7 @@ const Header = () => {
   };
 
   const handleAdmin = () => {
-    Router.push('/Admin/viewAdminList');
+    Router.push('/slot');
   };
 
 

@@ -20,3 +20,18 @@ export const admin_specialist_type_list = () => {
         })
         .catch(err => console.log(err));
 };
+
+export const add_slot = slotData => {
+    return fetch(`${API}/add_slot`, {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(slotData)
+    })
+        .then(response => {
+            return response.json();
+        })
+        .catch(err => console.log(err));
+};
