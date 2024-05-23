@@ -28,7 +28,7 @@ export const add_slot = slotData => {
             Accept: 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(slotData)
+        body:JSON.stringify(slotData)
     })
         .then(response => {
             return response.json();

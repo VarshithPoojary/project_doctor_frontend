@@ -136,7 +136,7 @@ const Registrations = () => {
                     return;
                   }
                   setcaretakerList(caretakertypeResponse.admin_specialist_type_list);
-                  alert(JSON.stringify(caretakerList))
+                  //alert(JSON.stringify(caretakerList))
               
           } 
           catch (error) {

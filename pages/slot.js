@@ -1,121 +1,17 @@
-/*import Link from 'next/link';
-import Router from 'next/router';
-import React, { useState } from 'react';
-import { add_slot } from '../actions/caretakertypeAction';
-
-const AddSlotForm = () => {
-    const [caretakerId, setCaretakerId] = useState('');
-    const [slotDate, setSlotDate] = useState('');
-    const [slotTimings, setSlotTimings] = useState([{ slot_time: '' }]);
-    const [createdById, setCreatedById] = useState('');
-    const [message, setMessage] = useState('');
-
-    const handleSlotTimingChange = (index, event) => {
-        const newSlotTimings = [...slotTimings];
-        newSlotTimings[index][event.target.name] = event.target.value;
-        setSlotTimings(newSlotTimings);
-    };
-
-    const handleAddSlotTiming = () => {
-        setSlotTimings([...slotTimings, { slot_time: '' }]);
-    };
-
-    const handleRemoveSlotTiming = (index) => {
-        const newSlotTimings = [...slotTimings];
-        newSlotTimings.splice(index, 1);
-        setSlotTimings(newSlotTimings);
-    };
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        const data = {
-            caretaker_id: caretakerId,
-            slot_date: slotDate,
-            slot_timings: slotTimings,
-            created_by_id: createdById
-        };
-
-        try {
-            const response = await add_slot(data);
-            const result = await response.json();
-            if (result.error) {
-                setMessage(result.msg);
-            } else {
-                setMessage('Slot added successfully!');
-            }
-        } catch (error) {
-            setMessage('An error occurred while adding the slot.');
-        }
-    };
-
-    return (
-        <div>
-            <h2>Add Slot</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Caretaker ID:</label>
-                    <input
-                        type="text"
-                        value={caretakerId}
-                        onChange={(e) => setCaretakerId(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Slot Date:</label>
-                    <input
-                        type="date"
-                        value={slotDate}
-                        onChange={(e) => setSlotDate(e.target.value)}
-                        required
-                    />
-                </div>
-                {slotTimings.map((timing, index) => (
-                    <div key={index}>
-                        <label>Slot Time:</label>
-                        <input
-                            type="text"
-                            name="slot_time"
-                            value={timing.slot_time}
-                            onChange={(e) => handleSlotTimingChange(index, e)}
-                            required
-                        />
-                        <button type="button" onClick={() => handleRemoveSlotTiming(index)}>Remove</button>
-                    </div>
-                ))}
-                <button type="button" onClick={handleAddSlotTiming}>Add Slot Time</button>
-                <div>
-                    <label>Created By ID:</label>
-                    <input
-                        type="text"
-                        value={createdById}
-                        onChange={(e) => setCreatedById(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">Add Slot</button>
-            </form>
-            {message && <p>{message}</p>}
-        </div>
-    );
-};
-
-export default AddSlotForm;*/
-
 import Head from 'next/head';
 import Router from 'next/router';
 import Topbar from './topbar';
 import Header from './Header';
 import React, { useState } from 'react';
+import {add_slot} from '../actions/caretakertypeAction';
 
 const AddSlotForm = () => {
   //  const [caretakerId, setCaretakerId] = useState('');
     const [slotDate, setSlotDate] = useState('');
     const [slotTimings, setSlotTimings] = useState([{ slot_time: '' }]);
    // const [createdById, setCreatedById] = useState('');
-    const [msg, setMsg] = useState('');
-    const [loading, setLoading] = useState(false);
+   const [loading, setLoading] = useState(false);
+   const [msg, setMsg] = useState('');
 
     const handleSlotTimingChange = (index, event) => {
         const newSlotTimings = [...slotTimings];
@@ -136,85 +32,42 @@ const AddSlotForm = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
-        const adminId = localStorage.getItem('id');
-        const data = {
-            caretaker_id: adminId,
-            slot_date: slotDate,
-            slot_timings: slotTimings,
-            created_by_id: adminId
-        };
 
+        const adminId = localStorage.getItem('id');
+       
         try {
-            const response = await add_slot(data);
-            const result = await response.json();
-            if (result.error) {
-                setMsg(result.msg);
+            const formData = new FormData();
+            formData.append('caretaker_id',adminId);
+            formData.append('slot_date',slotDate);
+           // formData.append('slot_timings',slotTimings);
+            formData.append('slot_time',slotTimings.slot_time);
+            formData.append('created_by_id',adminId);
+            formData.append('updated_by_id',adminId);
+
+            const res = await add_slot(formData);
+            //const res = await response.json();
+
+            setLoading(false);
+            if (res.msg) {
+                setMsg(res.msg);
+                setTimeout(() => setMsg(''), 1000);
+            } else if (res.error) {
+                setMsg('An error occurred. Please try again.');
+
             } else {
-                setMsg('Slot added successfully!');
-                setValues({ ...values, slot_date:'',slot_timings:'',loading: false });
-                Router.push('/dashboard');
+                setMsg('Added Successfully');
+                setTimeout(() => {
+                    setMsg('');
+                    Router.push(`/dashboard`);
+                }, 1000);
             }
         } catch (error) {
-            setMsg('An error occurred while adding the slot.');
+            console.error('Error:', error);
+            setLoading(false);
+            setMsg('An unexpected error occurred. Please try again.');
+            Router.push(`/dashboard`);
         }
     };
-
- /*   return (
-        <div className="formcontainer">
-            <h2>Add Slot</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>Caretaker ID:</label>
-                    <input
-                        type="text"
-                        value={caretakerId}
-                        onChange={(e) => setCaretakerId(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label>Slot Date:</label>
-                    <input
-                        type="date"
-                        value={slotDate}
-                        onChange={(e) => setSlotDate(e.target.value)}
-                        required
-                    />
-                </div>
-                {slotTimings.map((timing, index) => (
-                    <div className="form-group" key={index}>
-                        <label>Slot Time:</label>
-                        <input
-                            type="text"
-                            name="slot_time"
-                            value={timing.slot_time}
-                            onChange={(e) => handleSlotTimingChange(index, e)}
-                            required
-                        />
-                        {slotTimings.length > 1 && (
-                            <button type="button" onClick={() => handleRemoveSlotTiming(index)}>Remove</button>
-                        )}
-                    </div>
-                ))}
-                <button type="button" onClick={handleAddSlotTiming}>Add Slot Time</button>
-                <div className="form-group">
-                    <label>Created By ID:</label>
-                    <input
-                        type="text"
-                        value={createdById}
-                        onChange={(e) => setCreatedById(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">Add Slot</button>
-            </form>
-            {message && <p>{message}</p>}
-        </div>
-    );
-};
-
-export default AddSlotForm;
-*/
 
 return (
     <div id="wrapper">
@@ -255,8 +108,8 @@ return (
                                         
                                      <br></br>  
                                         <button className="btn btn-primary" type="submit" style={{  background: "#3085d6", borderColor: "#0c9da8",width:"100px"}}>Add Slot</button>
-                                        {loading ? (<div className="alert alert-success margin-top-10">Added successfully</div>) : null}
-                                        {msg && (<div className="alert alert-success margin-top-10">{msg}</div>)}
+                                      {loading ? (<div className="alert alert-success margin-top-10">Added successfully</div>) : null}
+                                       {msg && (<div className="alert alert-success margin-top-10">{msg}</div>)}
                                     </form>
                                 </div>
                             </div>
