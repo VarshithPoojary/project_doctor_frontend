@@ -121,6 +121,7 @@ const OTPPage = () => {
     console.log('Submitting form...');
   
     const userPhone = localStorage.getItem('userPhone');
+    //alert(JSON.stringify(userPhone))
     try {
       const response = await OtpByEmail(userPhone);
       const user = response;
