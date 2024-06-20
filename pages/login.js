@@ -38,10 +38,8 @@ const LoginForm = () => {
                 setTimeout(() => {
                     setValues({ ...values, error:'', loading: false });
                 }, 1000);
-
             } 
             else {
-
                 localStorage.setItem('id',response.userId);
                 setIsSuccess(true);
                 setSuccessMessage('Login successful!');

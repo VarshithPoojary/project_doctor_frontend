@@ -104,7 +104,7 @@ const Header = () => {
                 <MenuItem icon={<BiClinic />} title="Doctor">Doctor</MenuItem>
                 <MenuItem icon={<BiUserPlus />} title="Patient">Patient</MenuItem>
                 <MenuItem icon={<BiBriefcase />} title="Department">Department</MenuItem>
-                <MenuItem icon={<BiCalendarPlus />} title="Appointment">Appointment</MenuItem>
+                <MenuItem icon={<BiCalendarPlus />} title="Appointment"><Link href='/Appointment'><span>Appointment</span></Link></MenuItem>
                 <SubMenu title="Locations" icon={<FiMapPin />}  >
                   <MenuItem title="Country" icon={<BiMap />} >
                   <Link href='/Location/viewCountry'><span >Country</span></Link></MenuItem>

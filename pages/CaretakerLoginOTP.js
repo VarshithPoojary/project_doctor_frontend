@@ -132,7 +132,7 @@ const OTPPage = () => {
   
         const registration_data = {
           caretaker_phone_number:userPhone,
-          caretaker_register_status: true,
+          caretaker_register_status:true,
         };
   
       try {

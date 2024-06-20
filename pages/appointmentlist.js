@@ -6,18 +6,19 @@ import Router from 'next/router';
 import Head from 'next/head';
 import Header from './Header';
 import Topbar from './topbar';
-import { slot_listby_caretaker_id  } from '../actions/caretakertypeAction'; // Ensure the correct path
+import { appointment_list_by_caretakerId } from '../actions/caretakertypeAction'; // Ensure the correct path
 
-const SlotView = () => {
-    const [slotDetail, setslotDetail] = useState([]);
+const AppointmentsView = () => {
+    const [appointmentDetail, setAppointmentDetail] = useState([]);
     const [msg, setMsg] = useState('');
 
-  
+    const defaultProfileImage = '/images/userLogo.png'; // Ensure the path is correct
+
     useEffect(() => {
-        loadslotDetails();
+        loadAppointmentDetails();
     }, []);
 
-    const loadslotDetails = async () => {
+    const loadAppointmentDetails = async () => {
         try {
             const caretaker_id = localStorage.getItem('id');
             if (!caretaker_id) {
@@ -28,7 +29,7 @@ const SlotView = () => {
     
             console.log(`Fetching appointments for caretaker ID: ${caretaker_id}`);
     
-            const data = await slot_listby_caretaker_id (caretaker_id);
+            const data = await appointment_list_by_caretakerId(caretaker_id);
     
             console.log('Fetched data:', data);
     
@@ -38,18 +39,17 @@ const SlotView = () => {
                 setMsg('Failed to fetch appointments. Please try again later.');
                
             } 
-            else if (Array.isArray(data.slot_list)) {
+            else if (Array.isArray(data.appointment_list)) {
                 // Validate if appointment_list is an array
-                const mappedslots = data.slot_list.map((slots, index) => ({
-                    ...slots,
+                const mappedAppointments = data.appointment_list.map((appointment, index) => ({
+                    ...appointment,
                     sno: index + 1, // Adding a serial number for display purposes
-                  
+                    patient_profile_image: appointment.patient_profile_img || defaultProfileImage
                 }));
     
-                console.log('Mapped slots:', mappedslots);
+                console.log('Mapped Appointments:', mappedAppointments);
     
-                setslotDetail(mappedslots);
-
+                setAppointmentDetail(mappedAppointments);
             } else {
                 console.error('Unexpected data format:', data);
                 setMsg('Unexpected data format. Please contact support.');
@@ -66,16 +66,26 @@ const SlotView = () => {
     
     
 
-    
+    const displayImage = (cell, row) => {
+        return (
+            <img
+                src={row.patient_profile_image}
+                alt="Profile Image"
+                height="50px"
+                width="50px"
+                //style={{ borderRadius: "50%" }}
+            />
+        );
+    };
 
     const actionFormatter = (cell, row) => {
         return (
             <div>
                 <button style={{ backgroundColor: "#3085d6", borderColor: "#3085d6", width: "80px" }} onClick={() => handleEdit(row)}>
-               <FiEdit />
+                 Approve  {/*<FiEdit />*/}
                 </button>
                 <button style={{ backgroundColor: "rgb(225, 76, 76)", borderColor: "rgb(225, 76, 76)", width: "80px", marginLeft: "10%" }} onClick={() => handleDelete(row)}>
-              <FiTrash2 />
+                  Disapprove {/*<FiTrash2 />*/}
                 </button>
             </div>
         );
@@ -100,7 +110,7 @@ const SlotView = () => {
                 });
             } else {
                 Router.push({
-                    pathname: '/viewslots',
+                    pathname: '/appointmentlist',
                     query: { _id: row._id }
                 });
             }
@@ -134,25 +144,25 @@ const SlotView = () => {
     return (
         <Fragment>
             <Head>
-                <title>Slot List</title>
+                <title>Appointment List</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
             <Header />
             <Topbar />
             <div className="container-viewLocation">
                 <div className="center-table">
-                    <center><h2><b>Slot List</b></h2></center>
+                    <center><h2><b>Appointment List</b></h2></center>
                     
                     {msg && <div className="alert alert-success">{msg}</div>}
                     
-                    <BootstrapTable data={slotDetail} search={true}>
+                    <BootstrapTable data={appointmentDetail} search={true}>
                         <TableHeaderColumn dataField='sno' width="70" dataAlign="center" dataSort><b>S.No</b></TableHeaderColumn>
                         <TableHeaderColumn dataField="_id" isKey hidden>ID</TableHeaderColumn>
-                        {/*<TableHeaderColumn dataField='' dataAlign="center" editable={false} dataFormat={displayImage} dataSort>Profile</TableHeaderColumn>*/}
-                        <TableHeaderColumn dataField="slot_date"  width='150px' dataAlign="center" dataSort><b>Slot Date</b></TableHeaderColumn>
-                        <TableHeaderColumn dataField="slot_timings" dataAlign="center" dataSort><b>Slot timings</b></TableHeaderColumn>
-                        <TableHeaderColumn dataField="slot_status" width='150px' dataAlign="center" dataSort><b>Slot status</b></TableHeaderColumn>
-                        <TableHeaderColumn dataField="book_status" width='100px' dataAlign="center" dataSort><b>Status</b></TableHeaderColumn>
+                        <TableHeaderColumn dataField='patient_profile_image' dataAlign="center" editable={false} dataFormat={displayImage} dataSort>Profile</TableHeaderColumn>
+                        <TableHeaderColumn dataField="patient_name"  width='150px' dataAlign="center" dataSort><b>Patient Name</b></TableHeaderColumn>
+                        <TableHeaderColumn dataField="appointment_date" dataAlign="center" dataSort><b>Appointment Date</b></TableHeaderColumn>
+                        <TableHeaderColumn dataField="slot_timing" width='150px' dataAlign="center" dataSort><b>Slot Time</b></TableHeaderColumn>
+                        <TableHeaderColumn dataField="status" width='100px' dataAlign="center" dataSort><b>Status</b></TableHeaderColumn>
                         <TableHeaderColumn dataField="actions" width='210px' dataAlign="center" dataFormat={actionFormatter} ><b>Actions</b></TableHeaderColumn>
                     </BootstrapTable>
                 </div>
@@ -161,4 +171,4 @@ const SlotView = () => {
     );
 };
 
-export default SlotView;
+export default AppointmentsView;

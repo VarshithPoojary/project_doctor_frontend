@@ -602,7 +602,7 @@ const Registrations = () => {
                                 </div>
                                 <div className="row gx-3 mb-3">
                                     <div className="col-md-6">
-                                        <label className="small mb-1" htmlFor="caretakerlongitude">Latitude*</label>
+                                        <label className="small mb-1" htmlFor="caretakerlongitude">Longitude*</label>
                                         <input className="form-control" id="longitude" type="text" placeholder="Enter the longitude" value={longitude}
                                     onChange={(e) => setLongitude(e.target.value)} />
                                         {errors.longitude && <div className="error-message" style={{color:'red'}}>{errors.longitude}</div>}
