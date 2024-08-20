@@ -766,7 +766,8 @@ select {
     height: 100vh;
   }
   #header .closemenu {
-    color: #000000;
+    /*color: #000000;*/
+    color:#cfe1f8;
     position: absolute;
     right: 0;
     z-index: 9999;
@@ -790,6 +791,7 @@ select {
   #header .pro-sidebar-inner {
     background-color: #51a2d4;
     box-shadow: 2px 2px 2px 5px rgba(24, 172, 226, 0.15);
+   
   }
   #header .pro-sidebar-inner .pro-sidebar-layout {
     overflow-y: hidden;
@@ -798,13 +800,14 @@ select {
     font-size: 20px;
     padding: 0 20px;
     color: #000;
+   
     font-weight: bold;
   }
   #header .pro-sidebar-inner .pro-sidebar-layout ul {
     padding: 0 5px;
   }
   #header .pro-sidebar-inner .pro-sidebar-layout ul .pro-inner-item {
-    color: #000000;
+   color: #000000;
     margin: 10px 0px;
     font-weight: bold;
   }
@@ -1129,7 +1132,7 @@ select {
   
   /*login css*/
   
-  .patient-container {
+  .doctor-container {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -1137,12 +1140,12 @@ select {
 }
 
 .screen {		
-	background: linear-gradient(90deg, #b0e5f4,  #bae4ea);		
+	background: linear-gradient(90deg, #c9cbd1,  #8d94f3);		
 	position: fixed;	
 	min-height: 500px;
 	max-height: 501px;
 	width: 400px;	
-	box-shadow: 0px 0px 24px  #a2d4e1;
+	box-shadow: 0px 0px 24px  #6578b6;
 }
 
 .screen__content {
@@ -1182,7 +1185,7 @@ select {
 .screen__background__shape2 {
 	height: 220px;
 	width: 220px;
-	background: #87dce7;	
+	background: #325dc1;	
 	top: -172px;
 	right: 0;	
 	border-radius: 32px;
@@ -1191,7 +1194,7 @@ select {
 .screen__background__shape3 {
 	height: 540px;
 	width: 190px;
-	background: linear-gradient(270deg, #a5e0e8, rgb(154, 219, 236),#87dce7,#5ad5e5);
+	background: linear-gradient(270deg,  #325dc1, rgb(41, 38, 141), #325dc1, #325dc1);
 	top: -24px;
 	right: 0;	
 	border-radius: 32px;
@@ -1200,7 +1203,7 @@ select {
 .screen__background__shape4 {
 	height: 400px;
 	width: 200px;
-	background: #87dce7;	
+	background:  #325dc1;	
 	top: 420px;
 	right: 50px;	
 	border-radius: 60px;
@@ -1218,7 +1221,7 @@ select {
 	margin-top: 10px;
     font-size: 30px; 
     font-weight: bold;
-    color: #57dfe9; 
+    color: #3e34d0; 
     text-align: center; 
 }
 
@@ -1242,7 +1245,7 @@ select {
 .login__input:focus,
 .login__input:hover {
 	outline: none;
-	border-bottom-color: #7acfe7;
+	border-bottom-color: #3e34d0;
 }
 
 .login__submit {
@@ -1257,8 +1260,8 @@ select {
 	display: flex;
 	align-items: center;
 	width: 70%;
-	color: #339dba;
-	box-shadow: 0px 2px 2px #8bd4e8;
+	color: #3e34d0;
+	box-shadow: 0px 2px 2px #3e34d0;
 	cursor: pointer;
 	transition: .2s;
 }
@@ -1266,14 +1269,14 @@ select {
 .login__submit:active,
 .login__submit:focus,
 .login__submit:hover {
-	border-color: #67889e;
+	border-color: #3e34d0;
 	outline: none;
 }
 
 .button__icon {
 	font-size: 24px;
 	margin-left: auto;
-	color: #75a5b5;
+	color: #3e34d0;
 }
 
 
@@ -1481,10 +1484,84 @@ select {
   
   
   
-  
 
+ /* SlotView.module.css */
 
-  
+/* Container for the entire slot view page */
+.slotViewContainer {
+  padding: 10px;
+  background-color: #f8f9fa; /* Light gray background for a clean look */
+}
 
+/* Card styling for each date group */
+.dateCard {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  border: none; /* Remove default border */
+  margin-bottom: 20px; /* Space between cards */
+  border-radius: 10px; /* Rounded corners for a modern look */
+}
 
+/* Header of each card to differentiate the date */
+.dateCard .card-header {
+  background-color: #007bff; /* Bootstrap primary color */
+  color: #fff; /* White text for contrast */
+  font-weight: bold;
+  font-size: 18px;
+  padding: 10px 15px; /* Padding for spacing */
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+/* Table styling for better readability */
+.slotTable {
+  margin-top: 20px;
+}
+
+.slotTable th {
+  background-color: #343a40; /* Dark header background */
+  color: #fff; /* White text for header */
+  text-align: center; /* Center-align header text */
+}
+
+.slotTable td {
+  text-align: center; /* Center-align cell text */
+  vertical-align: middle; /* Center-align cell content vertically */
+  padding: 10px; /* Padding inside cells */
+  border-bottom: 1px solid #dee2e6; /* Light border for row separation */
+}
+
+/* Alternating row colors for better readability */
+.slotTable tr:nth-child(odd) {
+  background-color: #f8f9fa; /* Light background for odd rows */
+}
+
+.slotTable tr:nth-child(even) {
+  background-color: #ffffff; /* White background for even rows */
+}
+
+/* Hover effect for rows */
+.slotTable tr:hover {
+  background-color: #e9ecef; /* Light gray background on hover */
+}
+
+/* Custom styles for alert messages */
+.alertMsg {
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 5px;
+}
+
+/* Action buttons styling */
+.actionButton {
+  background-color: #17a2b8; /* Bootstrap info color */
+  border-color: #17a2b8;
+  color: #fff;
+  margin-right: 10px; /* Space between edit and delete buttons */
+}
+
+.actionButton.delete {
+  background-color: #dc3545; /* Bootstrap danger color */
+  border-color: #dc3545;
+}
 

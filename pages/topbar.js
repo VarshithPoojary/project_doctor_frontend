@@ -8,15 +8,15 @@ import { caretaker_list_by_id } from '../actions/registrationAction';
 const Topbar = () => {
   const defaultProfileImage = '/images/userLogo.jpeg';
   const [values, setValues] = useState({
-    admin_list:[],
-     admin_firstname: '',
-    admin_lastname: '',
-    admin_profile_image: '',
-    admin_password: '',
-    admin_mobile_no: '',
-    admin_email:'',
-    admin_username: '',
-    admin_type: '',
+    caretaker_list:[],
+    caretaker_firstname: '',
+    caretaker_lastname: '',
+    caretaker_profile_image: '',
+    caretaker_password: '',
+    caretaker_phone_number: '',
+    caretaker_email:'',
+   // admin_username: '',
+    //admin_type: '',
     error: '',
     loading: false,
     message: '',
@@ -28,7 +28,7 @@ const Topbar = () => {
     useEffect(() => {
       if (typeof window !== 'undefined') {
         const user_id = localStorage.getItem('id');
-        if (user_id === "" || user_id === null || user_id === undefined) {
+        if (user_id === ""|| user_id === null||user_id === undefined) {
           Router.push('/login');
         } else {
           loadUserDetails(user_id);
@@ -64,7 +64,7 @@ const loadUserDetails = (user_id) => {
       console.log(data.error);
       setValues({ ...values, error: data.error, loading: false });
     } else {
-      const caretakerData = data.admin_list[0];
+      const caretakerData = data.caretaker_list[0];
       setValues({ ...values,
         caretaker_profile_image: caretakerData.caretaker_profile_image || defaultProfileImage,     
          loading: false });
@@ -86,11 +86,11 @@ const loadUserDetails = (user_id) => {
 
   const signupForm = () => {
     return (
-      <div id="wrapper">
-        <div className="navbar-custom">
+      <div id="wrapper" style={{backgroundColor:'#3e34d0'}}>
+        <div className="navbar-custom"style={{backgroundColor:'#3e34d0'}}>
           <ul className="list-unstyled topnav-menu float-right mb-0">
             <li className="dropdown notification-list">
-            <Link href="/dashboard">
+            <Link href="#">
               <a className="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown"  role="button" aria-haspopup="false" aria-expanded="false">
                 <span className="ml-1 topbar-nav-link" ><FiHome /> Dashboard</span>
               </a>
@@ -108,14 +108,14 @@ const loadUserDetails = (user_id) => {
               </a>
             </li>
             <li className="dropdown notification-list">
-            <Link href="/Adminprofileui">
+            <Link href="/caretakerprofile">
               <a  className="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
                 <span className="ml-1 topbar-nav-link" ><FiUser /> Profile</span>
               </a>
               </Link>
             </li>
             <li className="dropdown notification-list">
-              <Link href='/Adminprofileui'>
+              <Link href='/caretakerprofile'>
               <a  className="nav-link dropdown-toggle nav-user mr-0 waves-effect waves-light" role="button" aria-haspopup="false" >
                 <span className="ml-1" style={{ color: "black" }}>
                   <img src={caretaker_profile_image} alt="Profile" style={{ width: '40px', height: '40px', borderRadius: '50%' }} />

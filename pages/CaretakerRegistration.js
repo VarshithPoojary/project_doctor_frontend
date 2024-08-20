@@ -18,7 +18,6 @@ const Registrations = () => {
     const [cityList, setCityList] = useState([]);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-   // const [caretakerreferralcode, setcaretakerNumber] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [caretakertype, setCaretakertype] = useState('');
@@ -40,10 +39,14 @@ const Registrations = () => {
     const [pincode, setPincode] = useState('');
     const [longitude, setLongitude] = useState('');
     const [latitude, setLatitude] = useState('');
-   // const [mainAddress, setMainAddress] = useState('');
+    const [Emgname, setEmgname] = useState('');
+    const [Emgphone, setEmgphone] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [profilePhoto, setProfilePhoto] = useState(null);
+    const [licenceimage, setlicenceimage] = useState(null);
+    const [licenseexpirydate, setlicenseexpirydate] = useState('');
+    const [description, setdescription] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
@@ -69,9 +72,14 @@ const Registrations = () => {
         pincode: '',
         longitude:'',
         latitude:'',
-       // mainAddress: '',
+        Emgname: '',
+        Emgphone: '',
         caretaker_password:'',
         profilePhoto: '', 
+        licenceimage:'',
+        description:'',
+        licenseexpirydate:''
+
     });
     const [passwordValidations, setPasswordValidations] = useState({
         upperCase: false,
@@ -81,35 +89,11 @@ const Registrations = () => {
         length: false,
     });
 
-    // useEffect(() => {
-    //     // Reset the patient number in localStorage when the component mounts
-    //     localStorage.removeItem('lastPatientNumber');
-    // }, []);
-
-    // useEffect(() => {
-    //     // Get the last patient number from localStorage
-    //     const lastPatientNumber = localStorage.getItem('lastPatientNumber');
-    //     // If there's no last patient number, set it to P001
-    //     if (!lastPatientNumber) {
-    //         setPatientNumber('P001');
-    //         localStorage.setItem('lastPatientNumber', 'P001');
-    //     } else {
-    //         // Set the patient number to the last patient number
-    //         setPatientNumber(lastPatientNumber);
-    //     }
-    // }, []);
+    
 
     useEffect(() => {
         const loadDetail = async () => {
           try {
-
-           /* const caretakertypeResponse = await admin_specialist_type_list();
-            console.log("caretaker type List:", caretakertypeResponse);
-            if (caretakertypeResponse.error) {
-              console.error(caretakertypeResponse.error);
-              return;
-            }
-            setcaretakerList(caretakertypeResponse.admin_specialist_type_list);*/
 
             const workResponse = await workExperience_list();
             console.log("Work Experience List:", workResponse);
@@ -213,6 +197,10 @@ const Registrations = () => {
         setProfilePhoto(e.target.files[0]);
     };
 
+    const onfileChange = (e) => {
+        setlicenceimage(e.target.files[0]);
+    };
+
     useEffect(() => {
         validatePassword(password);
     }, [password]);
@@ -232,9 +220,7 @@ const Registrations = () => {
         e.preventDefault();
         setIsLoading(true);
 
-        // const nextPatientNumber = `P${parseInt(patientNumber.substring(1)) + 1}`;
-        // setPatientNumber(nextPatientNumber);
-        // localStorage.setItem('lastPatientNumber', nextPatientNumber);
+       
 
         const validationErrors = {};
         if (!firstName.trim()) {
@@ -272,6 +258,12 @@ const Registrations = () => {
         if (!workexperience) {
             validationErrors.workexperience = 'Please enter your years of work experience';
         }
+        if (!Emgname) {
+            validationErrors.Emgname = 'Please enter emergency name';
+        }
+        if (!Emgphone) {
+            validationErrors.Emgphone = 'Please enter emergency phone numbner';
+        }
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             validationErrors.email = 'Please enter a valid email address.';
         }
@@ -296,9 +288,7 @@ const Registrations = () => {
             validationErrors.pincode = 'Please enter a valid pincode.';
         }
     
-       /* if (!mainAddress.trim()) {
-            validationErrors.mainAddress = 'Please enter your main address.';
-        }*/
+       
 
         if (!password) {
             validationErrors.password = 'Please enter your password.';
@@ -329,7 +319,7 @@ const Registrations = () => {
         const formData = new FormData();
         formData.append('caretaker_firstname', firstName);
         formData.append('caretaker_lastname', lastName);
-        //   formData.append('patient_unique_number', patientNumber);
+       
           formData.append('caretaker_phone_number', phoneNumber);
           formData.append('caretaker_country_code', countryCode);
           formData.append('caretaker_dob', dateOfBirth);
@@ -348,6 +338,11 @@ const Registrations = () => {
           formData.append('university_name', uniname);
           formData.append('caretaker_year_of_passing', yearofpassing);
           formData.append('caretaker_work_experience',workexperience);
+          formData.append('emergency_name',Emgname);
+          formData.append('emergency_phone',Emgphone);
+          formData.append('demo',licenceimage);
+          formData.append('description',description);
+          formData.append('driving_license_expiry_date',licenseexpirydate);
           formData.append('password', password);
           formData.append('demoimg', profilePhoto);
 
@@ -386,21 +381,18 @@ const Registrations = () => {
             <Head>
                 <title>caretaker Registration</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-                <meta name="title" content="caretaker Registration Form" />
+                <meta name="title"  content="caretaker Registration Form" />
                 <link rel="icon" href="/images/title_logo.png" />
             </Head>
 
-            <div className="container mt-4">
-                <div className="cardoi" style={{ width:'800px',backgroundColor:'white',alignContent:'center', boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%)' }}>
+            <div className="container mt-4" style={{width:'1000px'}}>
+                <div className="cardoi" style={{ width:'900px',backgroundColor:'white',alignContent:'center', boxShadow: '0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%)' }}>
                     <h4 className="mb-3 text-center">Registration Form</h4>
                     <p className="mb-3 text-center">Please fill in your details to register.</p>
 
                     <div className="card-body" style={{ padding: '20px' }}>
                         <form onSubmit={handleSubmit}>
-                        {/* <div className="mb-3">
-                                    <label className="small mb-1" htmlFor="PatientNumber">Patient Number</label>
-                                    <input className="form-control"  type="text" value={patientNumber} readOnly />
-                                </div> */}
+                       
                             <div className="form-group">
                                 <div className="row gx-3 mb-3">
                                     <div className="col-md-6">
@@ -481,10 +473,7 @@ const Registrations = () => {
                             </select>
                             {errors.caretakertype && <div className="error-message" style={{color:'red'}}>{errors.caretakertype}</div>}
 
-                                     {/*   <label className="small mb-1" htmlFor="caretakertype">CaretakerType*</label>
-                                        <input className="form-control" id="caretakertype" type="text" placeholder="Enter your type" value={caretakertype}
-                                    onChange={(e) => setCaretakertype(e.target.value)} />
-                                        {errors.caretakertype && <div className="error-message" style={{color:'red'}}>{errors.caretakertype}</div>}*/}
+                                    
                                     </div>
                                     <div className="col-md-6">
                                         <label className="small mb-1" htmlFor="caretakeraptnum">Apt Number*</label>
@@ -507,19 +496,19 @@ const Registrations = () => {
                                         {errors.uniname && <div className="error-message" style={{color:'red'}}>{errors.uniname}</div>}
                                     </div>
                                 </div>
-                              {/* <div className="row gx-3 mb-3">
+                               <div className="row gx-3 mb-3">
                                     <div className="col-md-6">
-                                        <label className="small mb-1" htmlFor="yearofpassing">Year of Passing*</label>
-                                        <input className="form-control" id="yearofpassing" type="text" placeholder="Enter your year of passing"  value={yearofpassing} onChange={(e) => setYearofpassing(e.target.value)} />
-                                        {errors.yearofpassing && <div className="error-message" style={{color:'red'}}>{errors.yearofpassing}</div>}
+                                        <label className="small mb-1" htmlFor="Emgname">Emergency name*</label>
+                                        <input className="form-control" id="Emgname" type="text" placeholder="Enter your emergency name"  value={Emgname} onChange={(e) => setEmgname(e.target.value)} />
+                                        {errors.Emgname && <div className="error-message" style={{color:'red'}}>{errors.Emgname}</div>}
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="small mb-1" htmlFor="workexperience">Work experience*</label>
-                                        <input className="form-control" id="workexperience" type="text" placeholder="Enter your work experience" value={workexperience}
-                                    onChange={(e) => setWorkexp(e.target.value)}/>
-                                        {errors.workexperience && <div className="error-message" style={{color:'red'}}>{errors.workexperience}</div>}
+                                        <label className="small mb-1" htmlFor="Emgphone">Emergency phone number*</label>
+                                        <input className="form-control" id="Emgphone" type="text" placeholder="Enter your emergency phone number" value={Emgphone}
+                                    onChange={(e) => setEmgphone(e.target.value)}/>
+                                        {errors.Emgphone && <div className="error-message" style={{color:'red'}}>{errors.Emgphone}</div>}
                                     </div>
-                                </div>*/}
+                                </div>
                                 
                          <div className="row gx-3 mb-3">
                           <div className="col-md-6">
@@ -594,11 +583,7 @@ const Registrations = () => {
                                         <input className="form-control" id="Pincode" type="text" placeholder="Enter your pincode" value={pincode} onChange={(e) => setPincode(e.target.value)}  />
                                         {errors.pincode && <div className="error-message" style={{color:'red'}}>{errors.pincode}</div>}
                                     </div>
-                                  { /* <div className="col-md-6">
-                                        <label className="small mb-1" htmlFor="Address"> Address*</label>
-                                        <textarea className="form-control" id="Address" rows="3" placeholder="Enter your main address" value={address} onChange={(e) => setAddress(e.target.value)}></textarea>
-                                        {errors.address && <div className="error-message" style={{color:'red'}}>{errors.address}</div>}
-                                    </div>*/}
+                                 
                                 </div>
                                 <div className="row gx-3 mb-3">
                                     <div className="col-md-6">
@@ -613,6 +598,21 @@ const Registrations = () => {
                                     onChange={(e) => setLatitude(e.target.value)}/>
                                         {errors.latitude && <div className="error-message" style={{color:'red'}}>{errors.latitude}</div>}
                                     </div>
+                                </div>
+                                <div className="row gx-3 mb-3">
+                                    <div className="col-md-6">
+                                        <label className="small mb-1" htmlFor="licenceimage">driving licence image</label>
+                                        <input className="form-control" id="licenceimage" type="file" onChange={onfileChange} />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <label className="small mb-1" htmlFor="licenseexpirydate">Driving license expiry date</label>
+                                        <input className="form-control" id="licenseexpirydate" type="date" value={licenseexpirydate} onChange={(e) => setlicenseexpirydate(e.target.value)} />
+                                    </div>
+                                </div>
+                                <div className="mb-3">
+                                    <label className="small mb-1" htmlFor="description">Description</label>
+                                    <textarea className="form-control" id="description" rows="3" placeholder="Enter description about you" value={description} onChange={(e) => setdescription(e.target.value)}></textarea>
+                                    
                                 </div>
                                 <div className="row gx-3 mb-3">
                                     <div className="col-md-6">

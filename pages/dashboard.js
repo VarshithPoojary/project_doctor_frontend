@@ -16,7 +16,7 @@ const Signup = () => {
         <link rel="icon" href="/images/title_logo.png" />
       </Head>
       
-      <Header />
+      <Header/>
       <Topbar />
       <Content />
     </div>

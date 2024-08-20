@@ -1,18 +1,19 @@
+
 import React, { Fragment, useState, useEffect } from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import Swal from 'sweetalert2';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
-import Router from 'next/router';
 import Head from 'next/head';
 import Header from './Header';
-import Topbar from './topbar';
-import { appointment_list_by_caretakerId } from '../actions/caretakertypeAction'; // Ensure the correct path
+//import Topbar from './Topbar';
+import {completed_appointmentlist_by_caretakerId} from '../actions/caretakertypeAction';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Link from 'next/link';
 
-const AppointmentsView = () => {
+const AppointmentView = () => {
     const [appointmentDetail, setAppointmentDetail] = useState([]);
     const [msg, setMsg] = useState('');
 
-    const defaultProfileImage = '/images/userLogo.png'; // Ensure the path is correct
+    const defaultProfileImage = './images/userLogo.jpeg'; 
 
     useEffect(() => {
         loadAppointmentDetails();
@@ -23,48 +24,36 @@ const AppointmentsView = () => {
             const caretaker_id = localStorage.getItem('id');
             if (!caretaker_id) {
                 setMsg('No doctor ID found. Please log in again.');
-                setMsgType('error');
                 return;
             }
-    
-            console.log(`Fetching appointments for caretaker ID: ${caretaker_id}`);
-    
-            const data = await appointment_list_by_caretakerId(caretaker_id);
-    
-            console.log('Fetched data:', data);
-    
-            // Check if there is an error field in the response data
+
+            console.log(`Fetching completed appointments for caretaker ID: ${caretaker_id}`);
+
+            const data = await completed_appointmentlist_by_caretakerId(caretaker_id);
+
             if (data.error) {
                 console.error('Error fetching data:', data.error);
                 setMsg('Failed to fetch appointments. Please try again later.');
-               
-            } 
-            else if (Array.isArray(data.appointment_list)) {
-                // Validate if appointment_list is an array
-                const mappedAppointments = data.appointment_list.map((appointment, index) => ({
-                    ...appointment,
-                    sno: index + 1, // Adding a serial number for display purposes
-                    patient_profile_image: appointment.patient_profile_img || defaultProfileImage
-                }));
-    
-                console.log('Mapped Appointments:', mappedAppointments);
-    
+            } else if (Array.isArray(data.appointment_list)) {
+                
+                const mappedAppointments = data.appointment_list
+                    .map((appointment, index) => ({
+                        ...appointment,
+                        sno: index + 1, 
+                        patient_profile_image: appointment.patient_profile_img || defaultProfileImage
+                    }))
+                    .sort((a, b) => new Date(a.appointment_date) - new Date(b.appointment_date));
+
                 setAppointmentDetail(mappedAppointments);
             } else {
                 console.error('Unexpected data format:', data);
                 setMsg('Unexpected data format. Please contact support.');
-                setMsgType('error');
             }
         } catch (error) {
             console.error('Failed to load appointment details:', error);
             setMsg('An unexpected error occurred. Please try again later.');
-            setMsgType('error');
         }
     };
-    
-    
-    
-    
 
     const displayImage = (cell, row) => {
         return (
@@ -73,102 +62,109 @@ const AppointmentsView = () => {
                 alt="Profile Image"
                 height="50px"
                 width="50px"
-                //style={{ borderRadius: "50%" }}
+                style={styles.profileImage}
             />
         );
     };
 
-    const actionFormatter = (cell, row) => {
+    
+    const patientDetailsLink = (cell, row) => {
         return (
-            <div>
-                <button style={{ backgroundColor: "#3085d6", borderColor: "#3085d6", width: "80px" }} onClick={() => handleEdit(row)}>
-                 Approve  {/*<FiEdit />*/}
-                </button>
-                <button style={{ backgroundColor: "rgb(225, 76, 76)", borderColor: "rgb(225, 76, 76)", width: "80px", marginLeft: "10%" }} onClick={() => handleDelete(row)}>
-                  Disapprove {/*<FiTrash2 />*/}
-                </button>
-            </div>
+            <Link href={`/Viewcompleteddetails/${row._id}`}>
+                <a className="btn btn-info" style={styles.detailsButton}>
+                    View Details
+                </a>
+            </Link>
         );
     };
 
-    const handleEdit = (row) => {
-        Swal.fire({
-            title: 'Approve Appointment',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes,Approve it!',
-            cancelButtonText: 'Cancel',
-            showCloseButton: true,
-            focusCancel: true,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Router.push({
-                    pathname: '/Doctor/EditDoctor',
-                    query: { _id: row._id }
-                });
-            } else {
-                Router.push({
-                    pathname: '/appointmentlist',
-                    query: { _id: row._id }
-                });
-            }
-        });
-    };
 
-    const handleDelete = (row) => {
-        const caretakerDeletedById = localStorage.getItem('id');
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'do you want to disapprove this appointment!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, disapprove it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                let query = { "_id": row._id, "caretaker_deleted_by_id": caretakerDeletedById }
-                DeleteDoctorDetails(query).then(data => {
-                    loadAppointmentDetails();
-                    setMsg(`Appointment for "${row.patient_name}" deleted successfully.`);
-                    setTimeout(() => {
-                        setMsg('');
-                    }, 2000);
-                });
-            }
-        });
-    }
+
 
     return (
         <Fragment>
             <Head>
-                <title>Appointment List</title>
+                <title>Appointments History</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
             <Header />
-            <Topbar />
-            <div className="container-viewLocation">
-                <div className="center-table">
-                    <center><h2><b>Appointment List</b></h2></center>
-                    
-                    {msg && <div className="alert alert-success">{msg}</div>}
-                    
-                    <BootstrapTable data={appointmentDetail} search={true}>
-                        <TableHeaderColumn dataField='sno' width="70" dataAlign="center" dataSort><b>S.No</b></TableHeaderColumn>
-                        <TableHeaderColumn dataField="_id" isKey hidden>ID</TableHeaderColumn>
-                        <TableHeaderColumn dataField='patient_profile_image' dataAlign="center" editable={false} dataFormat={displayImage} dataSort>Profile</TableHeaderColumn>
-                        <TableHeaderColumn dataField="patient_name"  width='150px' dataAlign="center" dataSort><b>Patient Name</b></TableHeaderColumn>
-                        <TableHeaderColumn dataField="appointment_date" dataAlign="center" dataSort><b>Appointment Date</b></TableHeaderColumn>
-                        <TableHeaderColumn dataField="slot_timing" width='150px' dataAlign="center" dataSort><b>Slot Time</b></TableHeaderColumn>
-                        <TableHeaderColumn dataField="status" width='100px' dataAlign="center" dataSort><b>Status</b></TableHeaderColumn>
-                        <TableHeaderColumn dataField="actions" width='210px' dataAlign="center" dataFormat={actionFormatter} ><b>Actions</b></TableHeaderColumn>
-                    </BootstrapTable>
-                </div>
+           
+            <br></br><br></br>
+            <div style={styles.container}>
+                <h2 style={styles.heading}>Appointments History</h2>
+                {msg && <div className="alert alert-info">{msg}</div>}
+
+                <BootstrapTable
+                    data={appointmentDetail}
+                    search
+                    containerStyle={styles.tableContainer}
+                    headerStyle={styles.tableHeader}
+                    bodyStyle={styles.tableBody}
+                >
+                    <TableHeaderColumn dataField='sno' width="60" dataAlign="center" dataSort><b>S.No</b></TableHeaderColumn>
+                    <TableHeaderColumn dataField="_id" isKey hidden>ID</TableHeaderColumn>
+                    <TableHeaderColumn dataField='patient_profile_image' width='150px' dataAlign="center" editable={false} dataFormat={displayImage} dataSort>Profile</TableHeaderColumn>
+                    <TableHeaderColumn dataField="patient_name" width='150px' dataAlign="center" dataSort><b>Patient Name</b></TableHeaderColumn>
+                    <TableHeaderColumn dataField="appointment_date" width='150px' dataAlign="center" dataSort><b>Appointment Date</b></TableHeaderColumn>
+                    <TableHeaderColumn dataField="slot_timing" width='150px' dataAlign="center" dataSort><b>Slot Time</b></TableHeaderColumn>
+                    <TableHeaderColumn dataField="status" width='100px' dataAlign="center" dataSort><b>Status</b></TableHeaderColumn>
+                    {/*<TableHeaderColumn dataField="actions" width='130px' dataAlign="center" dataFormat={actionFormatter}><b>Cancel</b></TableHeaderColumn>*/}
+                    <TableHeaderColumn dataField="details" width='150px' dataAlign="center" dataFormat={patientDetailsLink}><b>Patient Details</b></TableHeaderColumn>
+                </BootstrapTable>
             </div>
         </Fragment>
     );
 };
 
-export default AppointmentsView;
+
+const styles = {
+    container: {
+        padding: '20px',
+        backgroundColor: '#f8f9fa',
+        borderRadius: '8px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        margin: '20px auto',
+        maxWidth: '1200px'
+    },
+    heading: {
+        textAlign: 'center',
+        color: '#333',
+        marginBottom: '20px',
+        fontWeight: 'bold'
+    },
+    profileImage: {
+        borderRadius: '50%'
+    },
+    cancelButton: {
+        padding: '5px 15px',
+        borderRadius: '5px',
+        fontWeight: 'bold'
+    },
+    detailsButton: {
+        padding: '5px 15px',
+        borderRadius: '5px',
+        fontWeight: 'bold',
+        color: 'white',
+        backgroundColor: '#17a2b8',
+        border: 'none',
+        textDecoration: 'none',
+        width:'120px'
+    },
+    tableContainer: {
+        backgroundColor: 'white',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+    },
+    tableHeader: {
+        backgroundColor: '#f8f9fa',
+        color: '#333'
+    },
+    tableBody: {
+        backgroundColor: 'white'
+    }
+};
+
+export default AppointmentView;
+
+

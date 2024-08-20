@@ -1,3 +1,4 @@
+
 import Head from 'next/head';
 import Router from 'next/router';
 import Topbar from './topbar';
@@ -51,14 +52,14 @@ const AddSlotForm = () => {
                 setMsg('Added Successfully');
                 setTimeout(() => {
                     setMsg('');
-                    Router.push(`/dashboard`);
+                    Router.push(`/caretakerprofile`);
                 }, 1000);
             }
         } catch (error) {
             console.error('Error:', error);
             setLoading(false);
             setMsg('An unexpected error occurred. Please try again.');
-            Router.push(`/dashboard`);
+            Router.push(`/caretakerprofile`);
         }
     };
 
@@ -67,68 +68,89 @@ const AddSlotForm = () => {
             <Head>
                 <title>Add Slots</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-                <meta name="title" content='Add Slot' />
+                <meta name="title" content="Add Slot" />
                 <link rel="icon" href="/images/title_logo.png" />
             </Head>
             <Topbar />
             <Header />
-            <div className="content-page">
+            <div className="content-page" style={{ padding: '20px' }}>
                 <div className="content">
                     <div className="container-fluid">
-                        <div className="row">
+                        <div className="row justify-content-center" style={{justifyContent:'left'}}>
                             <div className="col-12">
-                                <div className="card mb-4" style={{ width: "600px", marginTop: "70px" }}>
-                                    <div className="card-header">Add Slots here</div>
-                                    <div className="card-body" style={{ maxWidth: "400px" }}>
+                                <div className="card mb-4" style={{ maxWidth: '600px', margin: '70px 0 0 0' }}>
+                                    <div className="card-header text-center">Add Slots here</div>
+                                    <div className="card-body">
                                         <form onSubmit={handleSubmit}>
-                                            <div className="form-group row">
+                                            <div className="form-group">
                                                 <label>Slot Date:</label>
-                                                <input 
-                                                    type="date" 
-                                                    value={slotDate} 
-                                                    onChange={(e) => setSlotDate(e.target.value)} 
-                                                    required 
+                                                <input
+                                                    type="date"
+                                                    className="form-control"
+                                                    value={slotDate}
+                                                    onChange={(e) => setSlotDate(e.target.value)}
+                                                    required
+                                                    style={{ width: '180px' }}
                                                 />
                                             </div>
                                             <div>
                                                 {slotTimings.map((timing, index) => (
-                                                    <div className="form-group" key={index}>
-                                                        <label>Slot Time:</label>
-                                                        <input 
-                                                            type="text" 
-                                                            name="slot_time" 
-                                                            value={timing.slot_time} 
-                                                            onChange={(e) => handleSlotTimingChange(index, e)} 
-                                                            required 
-                                                        />
+                                                    <div className="form-group row align-items-center" key={index}>
+                                                        <div className="col">
+                                                            <label>Slot Time:</label>
+                                                            <input
+                                                                type="text"
+                                                                name="slot_time"
+                                                                className="form-control"
+                                                                value={timing.slot_time}
+                                                                onChange={(e) => handleSlotTimingChange(index, e)}
+                                                                required
+                                                                style={{ width: '100%',height:'50px' }}
+                                                            />
+                                                        </div>
                                                         {slotTimings.length > 1 && (
-                                                            <button 
-                                                                type="button" 
-                                                                onClick={() => handleRemoveSlotTiming(index)}
-                                                            >
-                                                                Remove
-                                                            </button>
+                                                            <div className="col-auto">
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-danger"
+                                                                    onClick={() => handleRemoveSlotTiming(index)}
+                                                                    style={{ marginTop: '24px' }}
+                                                                >
+                                                                    <svg
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        width="10"
+                                                                        height="10"
+                                                                        fill="currentColor"
+                                                                        className="bi bi-trash"
+                                                                        viewBox="0 0 10 10"
+                                                                    >
+                                                                        <path d="M5.5 5.5A.5.5 0 0 1 6 5h4a.5.5 0 0 1 .5.5v7A.5.5 0 0 1 10 13H6a.5.5 0 0 1-.5-.5v-7zm3 1v6H7v-6h1.5zm1.5-.5v6h-1v-6h1zm-6 0h1v6H4v-6h1zm1-1V4a1 1 0 1 1 2 0v1h-2zm3-1v1H6V4a1 1 0 1 1 2 0zm3.5 1H9.936L9.5 4H6.5L6.064 5H2.5v1h11V5zM3.5 1.5A1.5 1.5 0 0 1 5 0h6a1.5 1.5 0 0 1 1.5 1.5v1h-9v-1z"/>
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
                                                         )}
                                                     </div>
                                                 ))}
-                                                <button 
-                                                    style={{ backgroundColor: "beige", width: "100px" }} 
-                                                    type="button" 
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-secondary"
                                                     onClick={handleAddSlotTiming}
+                                                    style={{ width: '140px',height:'35px' }}
                                                 >
                                                     New Time Slot
                                                 </button>
                                             </div>
                                             <br />
-                                            <button 
-                                                className="btn btn-primary" 
-                                                type="submit" 
-                                                style={{ background: "#3085d6", borderColor: "#0c9da8", width: "100px" }}
+                                            <button
+                                                className="btn btn-primary"
+                                                type="submit"
+                                                disabled={loading}
+                                                style={{width:'140px',height:'35px' }}
                                             >
                                                 Add Slot
                                             </button>
-                                            {loading && (<div className="alert alert-success margin-top-10">Loading...</div>)}
-                                            {msg && (<div className="alert alert-success margin-top-10">{msg}</div>)}
+                                            {loading && (<div className="alert alert-info mt-3">Loading...</div>)}
+                                            {msg && (<div className="alert alert-success mt-3">{msg}</div>)}
                                         </form>
                                     </div>
                                 </div>
@@ -140,4 +162,7 @@ const AddSlotForm = () => {
         </div>
     );
 };
+
 export default AddSlotForm;
+
+

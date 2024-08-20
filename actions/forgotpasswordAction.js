@@ -30,14 +30,14 @@ export const verifyOTP = (adminOTP) => {
       .catch(err => console.log(err));
   };
 
-export const resendOTP = adminMobileNumber => {
-  return fetch(`${API}/resend-otp`, {
+export const caretaker_resendOTP = MobileNumber => {
+  return fetch(`${API}/caretaker_resendOTP`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ admin_otp_mobile_no: adminMobileNumber })
+    body: JSON.stringify({ caretaker_phone_number: MobileNumber })
   })
     .then(response => {
       return response.json();
@@ -45,15 +45,14 @@ export const resendOTP = adminMobileNumber => {
     .catch(err => console.log(err));
 };
 
-export const resetPassword =( admin_otp_mobile_no, admin_new_password, admin_confirm_password, admin_otp)=> {
-  return fetch(`${API}/reset-password`, {
+export const caretaker_resetPassword  =(caretaker_email,password )=> {
+  return fetch(`${API}/caretaker_resetPassword `, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ 
-      admin_otp_mobile_no,admin_new_password,admin_confirm_password,admin_otp}) 
+    body: JSON.stringify({caretaker_email, password }) 
   })
     .then(response => {
       return response.json();
@@ -61,3 +60,17 @@ export const resetPassword =( admin_otp_mobile_no, admin_new_password, admin_con
     .catch(err => console.log(err));
 };
 
+export const caretaker_forgot_Password_OTP= Email => {
+  return fetch(`${API}/caretaker_forgot_Password_OTP`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ caretaker_email: Email })
+  })
+    .then(response => {
+      return response.json();
+    })
+    .catch(err => console.log(err));
+};
